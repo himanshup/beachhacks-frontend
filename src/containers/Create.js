@@ -1,60 +1,65 @@
 import React, { Component } from "react";
-import { createPost } from "../helpers/api";
-import Register from "../components/Register";
+import { createPost, getPosts } from "../helpers/api";
+import {
+  Button,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Container,
+  Card,
+  CardImg,
+  CardText,
+  CardBody,
+  CardTitle,
+  CardSubtitle,
+  CardColumns
+} from "reactstrap";
+import { Link } from "react-router-dom";
 
 class CreateContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      post: {
-        caption: "",
-        image: "",
-        beach_id: ""
-      }
+      posts: []
     };
   }
 
-  handleChangeFor = propertyName => event => {
-    const { post } = this.state;
-    const newPost = {
-      ...post,
-      [propertyName]: event.target.value
-    };
-    this.setState({ post: newPost });
-  };
+  componentDidMount() {
+    console.log(this.props);
 
-  handleSubmit = event => {
-    event.preventDefault();
-    const { post } = this.state;
-
-    createPost(post)
-      .then(postInfo => {
-        console.log(postInfo);
+    getPosts(this.props.match.params.id)
+      .then(posts => {
+        console.log(posts);
+        this.setState({ posts });
       })
-      .catch(error => console.log(error));
-  };
+      .catch(error => {
+        console.log(error);
+      });
+  }
 
   render() {
     return (
-      <div>
-        <input
-          type="text"
-          onChange={this.handleChangeFor("caption")}
-          value={this.state.post.caption}
-        />
-        <input
-          type="text"
-          onChange={this.handleChangeFor("image")}
-          value={this.state.post.image}
-        />
-        <input
-          type="text"
-          onChange={this.handleChangeFor("beach_id")}
-          value={this.state.post.beach_id}
-        />
-
-        <button onClick={this.handleSubmit}>Post</button>
-      </div>
+      <Container className="mt-5">
+        <Link
+          className="btn btn-primary"
+          to={`/create/${this.props.match.params.id}`}
+        >
+          New Post
+        </Link>
+        <CardColumns className="mt-3">
+          {this.state.posts &&
+            this.state.posts.map(post => (
+              <Card key={post.id}>
+                <CardImg top width="100%" src={post.image} alt={post.caption} />
+                <CardBody>
+                  <CardTitle>{post.caption}</CardTitle>
+                  <CardSubtitle>Posted by {post.author_username}</CardSubtitle>
+                </CardBody>
+              </Card>
+            ))}
+        </CardColumns>
+      </Container>
     );
   }
 }

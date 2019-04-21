@@ -52,7 +52,7 @@ export default class NavbarContainer extends Component {
                 </NavItem>
                 <NavItem>
                   <Link className="nav-link" to="/register">
-                    Register
+                    Sign Up
                   </Link>
                 </NavItem>
               </Nav>

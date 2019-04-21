@@ -49,3 +49,12 @@ export const createPost = post => {
     .then(postInfo => postInfo.data)
     .catch(error => error);
 };
+
+export const getPosts = id => {
+  const api = `api/posts/${id}`;
+
+  return axios
+    .get(api)
+    .then(posts => posts.data)
+    .catch(error => error);
+};
